@@ -24,6 +24,7 @@ A bit more research quickly revealed that this is a common sharding technique to
 So, great, simple enough! However, the real job here is the encryption, and here is where my first plan fell apart. There was a hope that if I used the same Phoenix and/or Guardian keys with the new CE cluster as I was using with the old hubs cloud stack, that it would "just work" and all my files would decrypt accurately down to the last bit. Sadly, this did not prove to be the case.
 
 This problem most likely could have been solved in one way or another, but by this point my attention span was exhausted and I was tired of mucking around with encryption keys, so I elected to try a different approach. I knew that I could download all my assets, unencrypted, by using the pattern "https://<domain_name>/files/<uuid><extension>". The uuids of all my files can be found in the "owned_file_uuid" column of the owned_files table, and the content_type field gives me the extension, as follows: 
+
     if type == 'application/json':
       ext = ".json"
     elif type == 'model/gltf-binary':
@@ -36,6 +37,7 @@ This problem most likely could have been solved in one way or another, but by th
       ext = ".jpg"
     elif type == "application/octet-stream":
       ext = ""
+      
 (Note that you need to put the "." into the extension itself, because the octet-stream object has none.)
 The second part of my new plan was to call the Reticulum API directly to upload these files, using my new cluster's local encryption scheme. I did all of this from Cloudshell on AWS, so that the downloads and uploads would all be bouncing around on the same AWS servers and I would not have to download the content across the internet to my house and then send it back. It is important to note, though, that I deleted each file after I was done using it, before downloading the next one! This is because Cloudshell only gives a user one gigabyte of local storage to work with, and I am transferring 12 gigs total here.
 
