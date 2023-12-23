@@ -69,6 +69,7 @@ So, now comes the fun part! First, the database is pretty easy. While I am downl
 Then, since I am running this script in my Cloudshell instance where I have direct access to kubtctl and my cluster, I can simply run the following from python via subprocess:
 
   subprocess.call("kubectl cp update.sql moz-pgsql-587fb8ccb8-8rtkj:/update.sql",shell=True)
+  
   subprocess.call("kubectl exec -it moz-pgsql-587fb8ccb8-8rtkj -- psql  -U postgres -h localhost retdb < update.sql",shell=True)
 
 Other people might write that into a bash script and call that instead, but either way, we're getting the job done.
